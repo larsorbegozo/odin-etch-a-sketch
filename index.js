@@ -1,23 +1,41 @@
-const gridContainer = document.querySelector('#container')
-const button = document.querySelector('button')
+const gridContainer = document.querySelector('#grid-container')
+const newGrid = document.querySelector('#new-grid')
+const colorPicker = document.querySelector('#color-picker')
+let currentColor = '#0000FF'
 let htmlElements = ""
 
+// Mouse behavior
+let mouseDown = false
+document.body.onmousedown = () => (mouseDown = true)
+document.body.onmouseup = () => (mouseDown = false)
+
+function setCurrentColor(newColor) {
+    currentColor = newColor
+}
+
+colorPicker.oninput = (e) => setCurrentColor(e.target.value)
+
+function changeColor(e) {
+    if(e.type === 'mouseover' && !mouseDown) return
+    e.target.style.backgroundColor = currentColor
+}
+
+// First Grid
 createGrid(16)
 
 // Paint the grid
 const allGridDiv = document.querySelectorAll('.grid')
 allGridDiv.forEach((individualDiv) => {
-    individualDiv.addEventListener('mouseenter', () => {
-        individualDiv.style.backgroundColor = 'blue'
-    })
+    individualDiv.addEventListener('mouseover', changeColor)
+    individualDiv.addEventListener('mousedown', changeColor)
 })
 
-button.addEventListener('click', () => {
+newGrid.addEventListener('click', () => {
     resetGrid()
     
-    let userChoice = parseInt(prompt("Please enter a number of squares per side:\n(max: 50)", ""))
+    let userChoice = parseInt(prompt("Please enter a number of squares per side:\n(max: 64)", ""))
 
-    if(isNaN(userChoice) || userChoice > 50 || userChoice < 0) {
+    if(isNaN(userChoice) || userChoice > 64 || userChoice < 0) {
         alert("Enter a valid number.")
         resetGrid()
         createGrid(16)
@@ -26,22 +44,19 @@ button.addEventListener('click', () => {
         createGrid(userChoice)
     }
     
-    // Paint the grid
+    // Paint the grid even after the 'NEW GRID' button was pressed
     const allGridDiv = document.querySelectorAll('.grid')
     allGridDiv.forEach((individualDiv) => {
-    individualDiv.addEventListener('mouseenter', () => {
-        individualDiv.style.backgroundColor = 'blue'
-        })
+        individualDiv.addEventListener('mouseover', changeColor)
+        individualDiv.addEventListener('mousedown', changeColor)
     })
 })
 
 function createGrid(x) {
-    for(let rows = 1; rows <= x; rows++) {
-        for(let column = 1; column <= x; column++) {
-            let size = 960/x
-            htmlElements += `<div class="grid" style="width: ${size-2}px; height:${size-2}px;"></div>`
-            gridContainer.innerHTML = htmlElements
-        }
+    for(let rows = 1; rows <= x*x; rows++) {
+        let size = 720/x
+        htmlElements += `<div class="grid" style="width: ${size}px; height:${size}px;"></div>`
+        gridContainer.innerHTML = htmlElements
     }
 }
 
