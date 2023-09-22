@@ -1,8 +1,14 @@
 const gridContainer = document.querySelector('#grid-container')
 const newGrid = document.querySelector('#new-grid')
 const colorPicker = document.querySelector('#color-picker')
-let currentColor = '#0000FF'
+const eraser = document.querySelector('#eraser')
+const clear = document.querySelector('#clear')
+const DEFAULT_COLOR = '#0000FF'
+const DEFAULT_GRID_NUMBER = 16
+
+let currentColor = DEFAULT_COLOR
 let htmlElements = ""
+let userChoice = DEFAULT_GRID_NUMBER
 
 // Mouse behavior
 let mouseDown = false
@@ -21,7 +27,7 @@ function changeColor(e) {
 }
 
 // First Grid
-createGrid(16)
+createGrid(DEFAULT_GRID_NUMBER)
 
 // Paint the grid
 const allGridDiv = document.querySelectorAll('.grid')
@@ -31,19 +37,33 @@ allGridDiv.forEach((individualDiv) => {
 })
 
 newGrid.addEventListener('click', () => {
-    resetGrid()
+    clearGrid()
     
-    let userChoice = parseInt(prompt("Please enter a number of squares per side:\n(max: 64)", ""))
+    userChoice = parseInt(prompt("Please enter a number of squares per side:\n(max: 24)", ""))
 
-    if(isNaN(userChoice) || userChoice > 64 || userChoice < 0) {
+    if(isNaN(userChoice) || userChoice > 24 || userChoice < 0) {
         alert("Enter a valid number.")
-        resetGrid()
-        createGrid(16)
+        clearGrid()
+        createGrid(DEFAULT_GRID_NUMBER)
     } else {
-        resetGrid()
+        clearGrid()
         createGrid(userChoice)
     }
     
+    // Paint the grid even after the 'NEW GRID' button was pressed
+    const allGridDiv = document.querySelectorAll('.grid')
+    allGridDiv.forEach((individualDiv) => {
+        individualDiv.addEventListener('mouseover', changeColor)
+        individualDiv.addEventListener('mousedown', changeColor)
+    })
+})
+
+eraser.addEventListener('click', () => {
+    currentColor = '#FAEDDD'
+})
+
+clear.addEventListener('click', () => {
+    resetGrid()
     // Paint the grid even after the 'NEW GRID' button was pressed
     const allGridDiv = document.querySelectorAll('.grid')
     allGridDiv.forEach((individualDiv) => {
@@ -60,7 +80,12 @@ function createGrid(x) {
     }
 }
 
-function resetGrid() {
+function clearGrid() {
     htmlElements = ""
     gridContainer.innerHTML = htmlElements
+}
+
+function resetGrid() {
+    clearGrid()
+    createGrid(userChoice)
 }

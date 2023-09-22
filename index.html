@@ -9,18 +9,29 @@
 <body>
     <script src="index.js" defer></script>
 
-    <div id="container">
-        <div id="button-container">
+    <header>
+        <h1 class="title">ETCH-A-SKETCH</h1>
+    </header>
+
+    <main>
+        <div id="settings">
             <button id="new-grid">NEW GRID</button>
+            <button id="eraser">ERASER</button>
+            <button id="clear">CLEAR</button>
             <input id="color-picker" type="color" value="#0000FF">
         </div>
-
-
-        <div id="grid-container"></div>
-    </div>
     
+        <div id="grid-container"></div>
+    </main>
 
+    <footer>
+        <div id="footer-text">2023 © Lars Orbegozo
+            <a href="https://github.com/larsorbegozo/">
+                <img src="images/github.webp">
+            </a>
+        </div>
+    </footer>
 
-    <footer id="footer">hola</footer>
 </body>
+
 </html>
